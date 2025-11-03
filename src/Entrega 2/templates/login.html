@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PicMoney Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 400px;
+            text-align: center;
+            overflow: hidden; /* Para a transição */
+        }
+        h1 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        p {
+            color: #777;
+            margin-bottom: 2rem;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .tab {
+            flex: 1;
+            padding: 0.8rem;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            color: #888;
+            font-weight: 500;
+            border-radius: 7px;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background-color: #ffffff;
+            color: #0d6efd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        form {
+            display: none; /* Começam escondidos */
+            flex-direction: column;
+        }
+        form.active {
+            display: flex; /* O JS vai mostrar */
+        }
+        label {
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        input[type="email"], input[type="password"], input[type="text"] {
+            width: 95%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #0d6efd;
+            color: white;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0b5ed7;
+        }
+        .error-message {
+            color: #dc3545; /* Vermelho de erro */
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none; /* Escondido por padrão */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Bem-vindo</h1>
+        <p>Entre com sua conta ou crie uma nova pra acessar</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showForm('login')">Entrar</div>
+            <div class="tab" onclick="showForm('register')">Cadastrar</div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="error-message" style="display: block; color: {{ 'green' if category == 'success' else '#dc3545' }}; background-color: {{ '#d4edda' if category == 'success' else '#f8d7da' }}; border-color: {{ '#c3e6cb' if category == 'success' else '#f5c2c7' }};">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form id="login-form" class="active" action="{{ url_for('login') }}" method="POST">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="seuemail@gmail.com" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" placeholder="********" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+         <form id="register-form" action="{{ url_for('register') }}" method="POST">
+            <label for="nome-reg">Nome Completo</label>
+            <input type="text" id="nome-reg" name="nome" placeholder="Seu Nome" required>
+
+            <label for="email-reg">E-mail</label>
+            <input type="email" id="email-reg" name="email" placeholder="seuemail@gmail.com" required>
+
+            <label for="senha-reg">Senha</label>
+            <input type="password" id="senha-reg" name="senha" placeholder="********" required>
+
+            <button type="submit">Criar conta</button>
+        </form>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const tabs = document.querySelectorAll('.tab');
+
+        function showForm(formName) {
+            if (formName === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
